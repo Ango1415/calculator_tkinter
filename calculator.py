@@ -4,8 +4,9 @@ Exercise where I'm going to develop a calculator GUI using Tkinter
 """
 import re
 import math
+import sys
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, Menu
 
 
 class Calculator(tk.Tk):
@@ -46,8 +47,36 @@ class Calculator(tk.Tk):
         # Variable related with the result panel
         self._result_var = tk.StringVar(value='Welcome')
 
-        # Create the elements for the window
+        # Create the menu bars and the elements for the window
+        self._create_menu()
         self._create_elements()
+
+    def _create_menu(self):
+        """
+        Creates the menu options for the window
+        :return:
+        """
+        main_menu = Menu(self)
+
+        # Options menu
+        options_menu = Menu(main_menu, tearoff=False)
+        options_menu.add_command(label='About',
+                                 command=lambda: messagebox.showinfo('About', 'Program made by /Ango1415 (on Github)'))
+        options_menu.add_separator()
+        options_menu.add_command(label='Exit', command=self._exit)
+        # Adds the submenu to the main menu
+        main_menu.add_cascade(menu=options_menu, label='Options')
+        # Adds the main menu to the window
+        self.config(menu=main_menu)
+
+    def _exit(self):
+        """
+        This method closes the window and ends the program
+        :return:
+        """
+        self.quit()
+        self.destroy()
+        sys.exit()
 
     def _create_elements(self):
         """
@@ -55,7 +84,9 @@ class Calculator(tk.Tk):
         :return:
         """
         # Entry boxes (Result panel)
-        result_panel = ttk.Entry(self, justify=tk.RIGHT, state='readonly', textvariable=self._result_var)
+        result_panel = tk.Entry(self, justify=tk.RIGHT, state='readonly', textvariable=self._result_var,
+                                font=('', 18, 'bold')
+                                )
         result_panel.grid(row=0, column=0, columnspan=4, sticky='NSEW')
 
         # Buttons 1st row
